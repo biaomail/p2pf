@@ -1,1 +1,68 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"/><link rel="icon" href="/p2p-file-transfer/favicon.ico"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="theme-color" content="#000000"/><meta name="description" content="P2P File Transfer"/><link rel="apple-touch-icon" href="/p2p-file-transfer/logo192.png"/><link rel="manifest" href="/p2p-file-transfer/manifest.json"/><title>P2P File Transfer</title><script defer="defer" src="/p2p-file-transfer/static/js/main.735b301f.js"></script></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div></body></html>
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/p2pf/favicon.ico" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="P2P File Transfer" />
+    <link rel="apple-touch-icon" href="/p2pf/logo192.png" />
+    <link rel="manifest" href="/p2pf/manifest.json" />
+    <title>P2P File Transfer</title>
+    <script defer="defer" src="/p2pf/static/js/main.735b301f.js"></script>
+    <script>
+        var gg
+        document.addEventListener('DOMContentLoaded', function() {
+            const url_prefix = `${piping.value}-signal-`
+            document.getElementById('submitBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (seed.value === '') {
+                    return
+                }
+                url = url_prefix + atob(window.Location.url + seed.value)
+                if (connId.value === '') {
+                    fetch(url).then(res => {
+                        if (res.ok) {
+                            res.text().then(r_id => {
+                                document.getElementById('answer').textContent = r_id
+                                navigator.clipboard.writeText(r_id)
+                            })
+                        }
+                    }).catch(error => console.error(error))
+                } else {
+                    fetch(url, {
+                        'method': 'POST',
+                        body: connId.value
+                    }).then(res => {
+                        console.log(res)
+                    }).catch(err => console.error(err))
+                }
+            });
+        });
+    </script>
+</head>
+
+
+<body><noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+
+
+    <div style="margin: auto;width: 50%;">
+        <form>
+            <select id='piping'>
+                <option value="https://ppng.io/">https://ppng.io/</option>
+                <option value="https://piping.glitch.me/">https://piping.glitch.me/</option>
+                <option value="https://piping-47q675ro2guv.runkit.sh/">https://piping-47q675ro2guv.runkit.sh/</option>
+            </select>
+            <input type="text" name="seed" id="seed" placeholder="Seed"> &nbsp;
+            <input type="text" name="connId" id="connId" value="" onclick="this.value=''">
+            <input type="button" id="submitBtn" value="Submit">
+        </form>
+
+        <div id="answer"></div>
+    </div>
+
+</body>
+
+</html>
